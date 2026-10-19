@@ -79,6 +79,8 @@ const SEEDS: Seed[] = [
     adapterConfig: { scenario: "stall" },
     autonomy: "autonomous",
     criteria: [{ description: "Pricing summary written", rule: { type: "artifact_exists", artifact: "pricing.md" } }],
+    // Allow more attempts than no-progress turns so stall detection (not the retry cap) is what stops it.
+    limits: { ...DEFAULT_LIMITS, maxAttemptsPerTask: 5, stallLimit: 2 },
     start: false,
   },
 ];
