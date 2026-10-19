@@ -479,8 +479,15 @@ export class Store {
     for (const [key, value] of Object.entries(patch) as Array<[keyof ProjectPatch, unknown]>) {
       if (value === undefined) continue;
       sets.push(`${PROJECT_COLUMNS[key]} = ?`);
+      // Free text (context, activity, reasons) can echo provider output or user pastes: redact before persisting.
       params.push(
-        value === null ? null : typeof value === "object" ? JSON.stringify(value) : (value as SQLInputValue),
+        value === null
+          ? null
+          : typeof value === "object"
+            ? JSON.stringify(redactDeep(value))
+            : typeof value === "string"
+              ? redact(value)
+              : (value as SQLInputValue),
       );
     }
     sets.push("updated_at = ?");

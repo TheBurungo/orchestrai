@@ -352,7 +352,7 @@ export class Orchestrator {
           // A transient error while *checking* must not re-dispatch (that would duplicate external work).
           const failures = p.noProgressSteps + 1;
           if (failures >= p.limits.maxAttemptsPerTask) {
-            this.store.updateProject(p.id, { noProgressSteps: failures });
+            this.store.updateProject(p.id, { noProgressSteps: failures }, ["working"]);
             return this.raiseAndWait(p, "blocked", {
               kind: "blocker",
               dedupeKey: `poll:${d.id}`,

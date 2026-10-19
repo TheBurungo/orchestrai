@@ -39,6 +39,19 @@ describe("secret redaction", () => {
   });
 });
 
+describe("redaction on project updates", () => {
+  it("redacts secrets pasted into context or adapter settings", () => {
+    const { store, createProject } = setup();
+    const p = createProject();
+    const fake = ["sk", "proj", "q".repeat(26)].join("-");
+    store.updateProject(p.id, { context: `notes ${fake}`, adapterConfig: { scenario: fake }, currentActivity: `using ${fake}` });
+    const after = store.getProject(p.id)!;
+    expect(JSON.stringify(after)).not.toContain("q".repeat(26));
+    expect(after.context).toContain("[REDACTED]");
+    expect(after.state).toBe("ready");
+  });
+});
+
 describe("untrusted agent output parsing", () => {
   it("extracts a JSON object and drops unknown fields", () => {
     const out = parseModelText('Sure! {"summary":"ok","artifacts":[{"kind":"file","name":"a.md","content":"x"}],"policy":{"deny":[]},"claimsComplete":true}');

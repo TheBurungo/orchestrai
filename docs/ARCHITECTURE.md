@@ -134,7 +134,7 @@ Implement `ProviderAdapter` (`server/adapters/types.ts`):
 - `validateConfig()`
 - `estimateCostCents()`
 - `dispatch()`: must be idempotent per `idempotencyKey`, or recoverable.
-- Optionally `poll()`, `recover()`, `checkRule()` and `submitHandoff()`.
+- Optionally `poll()`, `recover()` and `checkRule()`.
 
 Register it in `server/config.ts`. Mark simulated adapters `live: false`; the UI labels their work as simulated everywhere.
 
